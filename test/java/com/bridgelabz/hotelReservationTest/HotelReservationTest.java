@@ -69,4 +69,19 @@ public class HotelReservationTest {
 
 		Hotel cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
 	}
+	
+	@Test
+	public void searchingForHighestRated_ShoudlReturnRidgeWood()
+	{
+
+		String checkInDateAsString = "31Oct2020";
+		String checkOutDateAsString = "01Nov2020";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "dMMMyyyy" );
+		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
+		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
+
+		Hotel highestRated = HotelReservationSystem.findHighestRatedHotelForRegularCustomer(checkInDate, checkOutDate);
+		
+		assertEquals("RidgeWood", highestRated.getHotelName());
+	}
 }

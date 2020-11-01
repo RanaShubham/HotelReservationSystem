@@ -5,7 +5,7 @@ public abstract class Hotel
 	/**Returns rating of a Hotel in integer.
 	 * @return
 	 */
-	public abstract int getRating();
+	public abstract Integer getRating();
 	/**Returns week day price of a hotel for normal customers.
 	 * @return
 	 */

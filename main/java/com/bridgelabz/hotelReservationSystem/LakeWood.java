@@ -11,7 +11,7 @@ public class LakeWood extends Hotel
 	public Integer costOfStay = 0;
 	
 	@Override
-	public int getRating() {
+	public Integer getRating() {
 		// TODO Auto-generated method stub
 		return RATING;
 	}

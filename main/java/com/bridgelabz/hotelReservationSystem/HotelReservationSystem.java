@@ -37,10 +37,55 @@ public class HotelReservationSystem
 		System.out.println("Enter check out date as DDMMMYYYY");
 		String checkOutDateAsString = scan.next();
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
+//		
+//		Hotel bestHotel = findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
+//		
+//			System.out.println(bestHotel.getHotelName()+", Rating: "+bestHotel.getRating()+" and Total rates: $"+bestHotel.getCostOfStay());
+		Hotel bestHotel = findHighestRatedHotelForRegularCustomer(checkInDate, checkOutDate);
 		
-		Hotel bestHotel = findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
+		System.out.println(bestHotel.getHotelName()+", Rating: "+bestHotel.getRating()+" and Total rates: $"+bestHotel.getCostOfStay());
+	}
+
+	/**
+	 * To find the hotel with highest rating
+	 * @param checkInDate
+	 * @param checkOutDate
+	 * @return
+	 */
+	public static Hotel findHighestRatedHotelForRegularCustomer(LocalDate checkInDate, LocalDate checkOutDate) 
+	{
+		RidgeWood ridgeWood = new RidgeWood();
+		LakeWood lakeWood = new LakeWood();
+		BridgeWood bridgeWood = new BridgeWood();
+
+		ArrayList<Hotel> availablechoices = new ArrayList<>();
 		
-			System.out.println(bestHotel.getHotelName()+", Rating: "+bestHotel.getRating()+" and Total rates: $"+bestHotel.getCostOfStay());
+		availablechoices.add(bridgeWood);
+		availablechoices.add(lakeWood);
+		availablechoices.add(ridgeWood);
+		
+		Collections.sort(availablechoices, (hotelObj1, hotelObj2) -> hotelObj1.getRating() > (hotelObj2.getRating()) ? -1 : 1);
+				
+		int weekEndCounter = 0;
+		int weekDaysCounter = 0;
+		LocalDate startingDate =  checkInDate;
+		
+		long stayDuration = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
+				
+		if(stayDuration <= 0)
+			throw new InvalidCheckOutDateException("Checkin date must be greater than Checkout date");
+
+		while(!startingDate.equals(checkOutDate))
+		{
+			if(checkInDate.getDayOfWeek() == DayOfWeek.SATURDAY || checkInDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+				weekEndCounter++;
+			else
+				weekDaysCounter++;
+			startingDate = startingDate.plusDays(1);
+		}
+		
+		availablechoices.get(0).setCostOfStay(availablechoices.get(0).getWeekDayRegularPrice()*weekDaysCounter+availablechoices.get(0).getWeekEndRegularPrice()*weekEndCounter);		
+		return availablechoices.get(0);
 	}
 
 	/**
