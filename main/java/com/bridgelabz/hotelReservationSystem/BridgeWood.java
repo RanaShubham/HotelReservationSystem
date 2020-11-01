@@ -1,13 +1,13 @@
 package com.bridgelabz.hotelReservationSystem;
 
-public class LakeWood extends Hotel
+public class BridgeWood extends Hotel
 {
-	final String HOTEL_NAME = "LakeWood";
-	final int RATING = 3;
-	final int WEEKDAY_REGULAR_PRICE = 110;
-	final int WEEKDAY_REWARD_PRICE = 80;
-	final int WEEKEND_REGULAR_PRICE = 90;
-	final int WEEKEND_REWARD_PRICE = 80;
+	final String HOTEL_NAME = "BridgeWood";
+	final int RATING = 4;
+	final int WEEKDAY_REGULAR_PRICE = 160;
+	final int WEEKDAY_REWARD_PRICE = 110;
+	final int WEEKEND_REGULAR_PRICE = 60;
+	final int WEEKEND_REWARD_PRICE = 50;
 	public Integer costOfStay = 0;
 	
 	@Override

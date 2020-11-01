@@ -1,6 +1,6 @@
 package com.bridgelabz.hotelReservationSystem;
 
-public abstract class Hotel 
+public abstract class Hotel
 {
 	/**Returns rating of a Hotel in integer.
 	 * @return
@@ -22,9 +22,16 @@ public abstract class Hotel
 	 * @return
 	 */
 	public abstract int getWeeKEndRewardPrice();
+	/**sets cost of stay for hotel object
+	 * @return
+	 */
+	public abstract void setCostOfStay(int cost);
+	/**Returns the cost of stay
+	 * @return
+	 */
+	public abstract Integer getCostOfStay();
 	/**Returns Hotel name.
 	 * @return
 	 */
 	public abstract String getHotelName();
-
 }
