@@ -1,5 +1,6 @@
 package com.bridgelabz.hotelReservationSystem;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -13,9 +14,9 @@ public class HotelReservationSystem
 	public int regularWeekDayRate;
 	public int regularWeekEndPrice;
 
-	public HotelReservationSystem(String hotelname, int regularWeekDayPrice, int regularWeekEndPrice)
+	public HotelReservationSystem(String hotelName, int regularWeekDayPrice, int regularWeekEndPrice)
 	{
-		this.hotelName = hotelname;
+		this.hotelName = hotelName;
 		this.regularWeekDayRate = regularWeekDayPrice;
 		this.regularWeekEndPrice = regularWeekEndPrice;
 	}
@@ -37,7 +38,7 @@ public class HotelReservationSystem
 		
 		Hotel bestHotel = findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
 		
-		System.out.println(bestHotel.getHotelName()+", Total rates: $"+bestHotel.getCostOfStay());
+		//System.out.println(bestHotel.getHotelName()+", Total rates: $"+bestHotel.getCostOfStay());
 	}
 
 	/**
@@ -58,18 +59,29 @@ public class HotelReservationSystem
 	 */
 	public static Hotel findCheapestHotelForRegularCustomer(LocalDate checkInDate, LocalDate checkoutDate)
 	{	
+		int weekEndCounter = 0;
+		int weekDaysCounter = 0;
+		
 		Period stayDuration = Period.between(checkInDate, checkoutDate);
+		
 		if(stayDuration.getDays() <= 0)
 			throw new InvalidCheckOutDateException("Check in date must be greater than Checkout date");
-		int daysOfStay = stayDuration.getDays();
 		
 		RidgeWood ridgeWood = new RidgeWood();
 		LakeWood lakeWood = new LakeWood();
 		BridgeWood bridgeWood = new BridgeWood();
 		
-		ridgeWood.setCostOfStay(ridgeWood.getWeekDayRegularPrice()*daysOfStay);
-		lakeWood.setCostOfStay(lakeWood.getWeekDayRegularPrice()*daysOfStay);;
-		bridgeWood.setCostOfStay(bridgeWood.getWeekDayRegularPrice()*daysOfStay);;
+		while(!checkInDate.equals(checkoutDate))
+		{
+			if(checkInDate.getDayOfWeek() == DayOfWeek.SATURDAY || checkInDate.getDayOfWeek() == DayOfWeek.SUNDAY)
+				weekEndCounter++;
+			else
+				weekDaysCounter++;
+		}
+		
+		ridgeWood.setCostOfStay(ridgeWood.getWeekDayRegularPrice()*weekDaysCounter+ridgeWood.getWeekEndRegularPrice()*weekEndCounter);
+		lakeWood.setCostOfStay(lakeWood.getWeekDayRegularPrice()*weekDaysCounter+lakeWood.getWeekEndRegularPrice()*weekEndCounter);;
+		bridgeWood.setCostOfStay(bridgeWood.getWeekDayRegularPrice()*weekDaysCounter+bridgeWood.getWeekEndRegularPrice()*weekEndCounter);;
 		
 		return getBestChoice(ridgeWood, lakeWood, bridgeWood );
 	}
