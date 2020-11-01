@@ -20,7 +20,7 @@ public class HotelReservationTest {
 		//Hotel object for which we need to create HotelReservationSystem object
 		RidgeWood ridgeWood = new RidgeWood();
 		
-		HotelReservationSystem newHotel = HotelReservationSystem.addHotelForRegularCustomer(ridgeWood.getHotelName(), ridgeWood.getWeekDayRegularPrice(), ridgeWood.getWeekEndRegularPrice());
+		HotelReservationSystem newHotel = HotelReservationSystem.addHotelForRegularCustomer(ridgeWood.getHotelName(), ridgeWood.getWeekDayRegularPrice(), ridgeWood.getWeekEndRegularPrice(), ridgeWood.getRating());
 		boolean result = newHotel.hotelName.equals(ridgeWood.getHotelName()) && 
 		newHotel.regularWeekDayRate ==  ridgeWood.getWeekDayRegularPrice() &&
 		newHotel.regularWeekEndPrice == ridgeWood.getWeekEndRegularPrice();
