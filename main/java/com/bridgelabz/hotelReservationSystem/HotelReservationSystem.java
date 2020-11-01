@@ -36,9 +36,12 @@ public class HotelReservationSystem
 		String checkOutDateAsString = scan.next();
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 		
-		Hotel bestHotel = findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
+		Hotel[] bestHotel = findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
 		
-		//System.out.println(bestHotel.getHotelName()+", Total rates: $"+bestHotel.getCostOfStay());
+		if(bestHotel.length == 1)
+			System.out.println(bestHotel[0].getHotelName()+", Total rates: $"+bestHotel[0].getCostOfStay());
+		else
+			System.out.println(bestHotel[0].getHotelName()+" and "+bestHotel[1].getHotelName()+", Total rates: $"+bestHotel[0].getCostOfStay());
 	}
 
 	/**
@@ -53,14 +56,15 @@ public class HotelReservationSystem
 	}
 	
 	/**
-	 * 
+	 * Calculates the price of all hotels based on stay duration.
 	 * @param checkInDate
 	 * @param checkoutDate
 	 */
-	public static Hotel findCheapestHotelForRegularCustomer(LocalDate checkInDate, LocalDate checkoutDate)
+	public static Hotel[] findCheapestHotelForRegularCustomer(LocalDate checkInDate, LocalDate checkoutDate)
 	{	
 		int weekEndCounter = 0;
 		int weekDaysCounter = 0;
+		LocalDate startingDate =  checkInDate;
 		
 		Period stayDuration = Period.between(checkInDate, checkoutDate);
 		
@@ -71,22 +75,30 @@ public class HotelReservationSystem
 		LakeWood lakeWood = new LakeWood();
 		BridgeWood bridgeWood = new BridgeWood();
 		
-		while(!checkInDate.equals(checkoutDate))
+		while(!startingDate.equals(checkoutDate))
 		{
 			if(checkInDate.getDayOfWeek() == DayOfWeek.SATURDAY || checkInDate.getDayOfWeek() == DayOfWeek.SUNDAY)
 				weekEndCounter++;
 			else
 				weekDaysCounter++;
+			startingDate = startingDate.plusDays(1);
 		}
 		
 		ridgeWood.setCostOfStay(ridgeWood.getWeekDayRegularPrice()*weekDaysCounter+ridgeWood.getWeekEndRegularPrice()*weekEndCounter);
 		lakeWood.setCostOfStay(lakeWood.getWeekDayRegularPrice()*weekDaysCounter+lakeWood.getWeekEndRegularPrice()*weekEndCounter);;
 		bridgeWood.setCostOfStay(bridgeWood.getWeekDayRegularPrice()*weekDaysCounter+bridgeWood.getWeekEndRegularPrice()*weekEndCounter);;
 		
-		return getBestChoice(ridgeWood, lakeWood, bridgeWood );
+		return getBestChoice(ridgeWood, lakeWood, bridgeWood);
 	}
 
-	private static Hotel getBestChoice(RidgeWood ridgeWood, LakeWood lakeWood, BridgeWood bridgeWood) 
+	/**
+	 * To calculate rates of various available choices to return cheapest hotel.
+	 * @param ridgeWood
+	 * @param lakeWood
+	 * @param bridgeWood
+	 * @return Hotel that is cheapest
+	 */
+	private static Hotel[] getBestChoice(RidgeWood ridgeWood, LakeWood lakeWood, BridgeWood bridgeWood) 
 	{
 		ArrayList<Hotel> availablechoices = new ArrayList<>();
 		
@@ -96,7 +108,17 @@ public class HotelReservationSystem
 		
 		Collections.sort(availablechoices, (hotelObj1, hotelObj2) ->hotelObj1.getCostOfStay().compareTo(hotelObj2.getCostOfStay()));
 		
-		return availablechoices.get(0);
+		//if first two hotels have same price then we have two cheapest hotels
+		if (availablechoices.get(0).getCostOfStay().equals(availablechoices.get(1).getCostOfStay()))
+		{
+			Hotel [] choices = { availablechoices.get(0), availablechoices.get(1) };
+			return choices;
+		}
+		else
+		{
+			Hotel [] choices = { availablechoices.get(0)};
+			return choices;
+		}
 	}
 
 }

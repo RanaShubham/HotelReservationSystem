@@ -24,22 +24,23 @@ public class HotelReservationTest {
 		boolean result = newHotel.hotelName.equals(ridgeWood.getHotelName()) && 
 		newHotel.regularWeekDayRate ==  ridgeWood.getWeekDayRegularPrice() &&
 		newHotel.regularWeekEndPrice == ridgeWood.getWeekEndRegularPrice();
-		
+
 		assertTrue(result);
 	}
 	
 	@Test
 	public void gettingCheapestHotelOnWeekDay_whenStayingForOneDay_ShouldReturnLakeWood()
 	{
+
 		String checkInDateAsString = "02Nov2020";
 		String checkOutDateAsString = "03Nov2020";
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "dMMMyyyy" );
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		Hotel cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
+		Hotel[] cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
 		
-		assertSame(cheaptestHotel.getHotelName(), "LakeWood");
+		assertEquals("LakeWood", cheaptestHotel[0].getHotelName());
 	}
 	
 	@Test(expected = InvalidCheckOutDateException.class)
@@ -51,6 +52,6 @@ public class HotelReservationTest {
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		Hotel cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
+		Hotel[] cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
 	}
 }
