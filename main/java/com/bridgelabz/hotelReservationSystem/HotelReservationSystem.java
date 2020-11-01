@@ -2,8 +2,8 @@ package com.bridgelabz.hotelReservationSystem;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -27,7 +27,7 @@ public class HotelReservationSystem
 	{
 		System.out.println("Welcome to Hotel Reservation System");
 		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "dMMMyyyy" );
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "ddMMMyyyy" );
 		Scanner scan = new Scanner (System.in);
 		
 		System.out.println("Enter check in date as DDMMMYYYY");
@@ -38,12 +38,9 @@ public class HotelReservationSystem
 		String checkOutDateAsString = scan.next();
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 		
-		Hotel[] bestHotel = findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
+		Hotel bestHotel = findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
 		
-		if(bestHotel.length == 1)
-			System.out.println(bestHotel[0].getHotelName()+", Total rates: $"+bestHotel[0].getCostOfStay());
-		else
-			System.out.println(bestHotel[0].getHotelName()+" and "+bestHotel[1].getHotelName()+", Total rates: $"+bestHotel[0].getCostOfStay());
+			System.out.println(bestHotel.getHotelName()+", Rating: "+bestHotel.getRating()+" and Total rates: $"+bestHotel.getCostOfStay());
 	}
 
 	/**
@@ -62,16 +59,16 @@ public class HotelReservationSystem
 	 * @param checkInDate
 	 * @param checkoutDate
 	 */
-	public static Hotel[] findCheapestHotelForRegularCustomer(LocalDate checkInDate, LocalDate checkoutDate)
+	public static Hotel findCheapestHotelForRegularCustomer(LocalDate checkInDate, LocalDate checkoutDate)
 	{	
 		int weekEndCounter = 0;
 		int weekDaysCounter = 0;
 		LocalDate startingDate =  checkInDate;
 		
-		Period stayDuration = Period.between(checkInDate, checkoutDate);
-		
-		if(stayDuration.getDays() <= 0)
-			throw new InvalidCheckOutDateException("Check in date must be greater than Checkout date");
+		long stayDuration = ChronoUnit.DAYS.between(checkInDate, checkoutDate);
+				
+		if(stayDuration <= 0)
+			throw new InvalidCheckOutDateException("Checkin date must be greater than Checkout date");
 		
 		RidgeWood ridgeWood = new RidgeWood();
 		LakeWood lakeWood = new LakeWood();
@@ -100,7 +97,7 @@ public class HotelReservationSystem
 	 * @param bridgeWood
 	 * @return Hotel that is cheapest
 	 */
-	private static Hotel[] getBestChoice(RidgeWood ridgeWood, LakeWood lakeWood, BridgeWood bridgeWood) 
+	private static Hotel getBestChoice(RidgeWood ridgeWood, LakeWood lakeWood, BridgeWood bridgeWood) 
 	{
 		ArrayList<Hotel> availablechoices = new ArrayList<>();
 		
@@ -110,16 +107,28 @@ public class HotelReservationSystem
 		
 		Collections.sort(availablechoices, (hotelObj1, hotelObj2) ->hotelObj1.getCostOfStay().compareTo(hotelObj2.getCostOfStay()));
 		
-		//if first two hotels have same price then we have two cheapest hotels
+		//If all the hotels have same rates for stay duration then choose the one with highest rating
+		if(availablechoices.get(0).getCostOfStay().equals(availablechoices.get(1).getCostOfStay()) && availablechoices.get(0).getCostOfStay().equals(availablechoices.get(2)))
+		{
+			if(availablechoices.get(0).getRating() > availablechoices.get(1).getRating() && availablechoices.get(0).getRating() > availablechoices.get(2).getRating())
+				return availablechoices.get(0);
+			if(availablechoices.get(1).getRating() > availablechoices.get(0).getRating() && availablechoices.get(1).getRating() > availablechoices.get(2).getRating())
+				return availablechoices.get(1);
+			if(availablechoices.get(2).getRating() > availablechoices.get(0).getRating() && availablechoices.get(2).getRating() > availablechoices.get(1).getRating())
+				return availablechoices.get(1);
+		}
+		//if first two hotels have same price then we choose hotel with higer rating
 		if (availablechoices.get(0).getCostOfStay().equals(availablechoices.get(1).getCostOfStay()))
 		{
-			Hotel [] choices = { availablechoices.get(0), availablechoices.get(1) };
-			return choices;
+			if(availablechoices.get(0).getRating() > availablechoices.get(1).getRating())
+				return availablechoices.get(0);
+			else
+				return availablechoices.get(1);
 		}
 		else
 		{
-			Hotel [] choices = { availablechoices.get(0)};
-			return choices;
+			Hotel choice = availablechoices.get(0);
+			return choice;
 		}
 	}
 

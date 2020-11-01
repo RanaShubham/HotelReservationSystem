@@ -38,9 +38,24 @@ public class HotelReservationTest {
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		Hotel[] cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
+		Hotel cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
 		
-		assertEquals("LakeWood", cheaptestHotel[0].getHotelName());
+		assertEquals("LakeWood", cheaptestHotel.getHotelName());
+	}
+	
+	@Test
+	public void gettingCheapestHotel_withBestRating_WhenStayingForWeekendShoudlReturnBridgeWood()
+	{
+
+		String checkInDateAsString = "31Oct2020";
+		String checkOutDateAsString = "01Nov2020";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "dMMMyyyy" );
+		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
+		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
+
+		Hotel cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
+		
+		assertEquals("BridgeWood", cheaptestHotel.getHotelName());
 	}
 	
 	@Test(expected = InvalidCheckOutDateException.class)
@@ -52,6 +67,6 @@ public class HotelReservationTest {
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		Hotel[] cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
+		Hotel cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
 	}
 }
