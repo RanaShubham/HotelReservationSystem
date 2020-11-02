@@ -24,7 +24,7 @@ public class HotelReservationTest {
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		Hotel cheaptestHotel = HotelReservationSystem.getCostOfHotelStay(checkInDate, checkOutDate, "Regular");
+		Hotel cheaptestHotel = HotelReservationSystem.getBestHotelHotelByCostAndRating(checkInDate, checkOutDate, "Regular");
 		
 		assertEquals("LakeWood", cheaptestHotel.getHotelName());
 	}
@@ -39,7 +39,7 @@ public class HotelReservationTest {
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		Hotel cheaptestHotel = HotelReservationSystem.getCostOfHotelStay(checkInDate, checkOutDate, "Regular");
+		Hotel cheaptestHotel = HotelReservationSystem.getBestHotelHotelByCostAndRating(checkInDate, checkOutDate, "Regular");
 		
 		assertEquals("BridgeWood", cheaptestHotel.getHotelName());
 	}
@@ -53,7 +53,7 @@ public class HotelReservationTest {
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		HotelReservationSystem.getCostOfHotelStay(checkInDate, checkOutDate, "Regular");
+		HotelReservationSystem.getBestHotelHotelByCostAndRating(checkInDate, checkOutDate, "Regular");
 	}
 	
 	@Test(expected = InvalidCheckOutDateException.class)
@@ -113,7 +113,7 @@ public class HotelReservationTest {
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		HotelReservationSystem.getCostOfHotelStay(checkInDate, checkOutDate, "Reular");
+		HotelReservationSystem.getBestHotelHotelByCostAndRating(checkInDate, checkOutDate, "Reular");
 	}
 	
 	@Test(expected = InvalidCustomerTypeException.class)
@@ -125,6 +125,6 @@ public class HotelReservationTest {
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		HotelReservationSystem.getCostOfHotelStay(checkInDate, checkOutDate, null);
+		HotelReservationSystem.getBestHotelHotelByCostAndRating(checkInDate, checkOutDate, null);
 	}
 }

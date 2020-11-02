@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,16 +52,10 @@ public class HotelReservationSystem
 		
 		System.out.println("Enter customer type as 'Reward' or 'Regular'");
 		String customerType = scan.next();
-		
+				
 		//Getting cheapest hotel for both customer types
-		Hotel bestHotel = getCostOfHotelStay(checkInDate, checkOutDate, customerType);
-		System.out.println(bestHotel.getHotelName()+", Rating: "+bestHotel.getRating()+" and Total rates: $"+bestHotel.getCostOfStay());
-		
-		System.out.println("\n");
-		
-		//Getting highest rated hotel for both customer types
-		Hotel HighestRatedHotel = findHighestRatedHotelForCustomer(checkInDate, checkOutDate, customerType);
-		System.out.println(HighestRatedHotel.getHotelName()+", Rating: "+HighestRatedHotel.getRating()+" and Total rates: $"+HighestRatedHotel.getCostOfStay());
+		Hotel bestHotel = getBestHotelHotelByCostAndRating(checkInDate, checkOutDate, customerType);
+		System.out.println("Most affordable hotel for "+customerType+" customer is "+bestHotel.getHotelName()+", Rating: "+bestHotel.getRating()+" and Total rates: $"+bestHotel.getCostOfStay());
 	}
 
 	public static void verifyDate(String date, String DATE_REGEX) 
@@ -140,11 +135,11 @@ public class HotelReservationSystem
 	}
 	
 	/**
-	 * Calculates the total price of stay for regular as well as reward customer for all hotels
+	 * Fetches best hotel for regular as well as reward customer for among all hotels based on rating and price.
 	 * @param checkInDate
 	 * @param checkoutDate
 	 */
-	public static Hotel getCostOfHotelStay(LocalDate checkInDate, LocalDate checkoutDate, String customerType)
+	public static Hotel getBestHotelHotelByCostAndRating(LocalDate checkInDate, LocalDate checkoutDate, String customerType)
 	{
 		if(customerType == null)
 		{
@@ -212,29 +207,9 @@ public class HotelReservationSystem
 		
 		Collections.sort(availablechoices, (hotelObj1, hotelObj2) ->hotelObj1.getCostOfStay().compareTo(hotelObj2.getCostOfStay()));
 		
-		//If all the hotels have same rates for stay duration then choose the one with highest rating
-		if(availablechoices.get(0).getCostOfStay().equals(availablechoices.get(1).getCostOfStay()) && availablechoices.get(0).getCostOfStay().equals(availablechoices.get(2)))
-		{
-			if(availablechoices.get(0).getRating() > availablechoices.get(1).getRating() && availablechoices.get(0).getRating() > availablechoices.get(2).getRating())
-				return availablechoices.get(0);
-			if(availablechoices.get(1).getRating() > availablechoices.get(0).getRating() && availablechoices.get(1).getRating() > availablechoices.get(2).getRating())
-				return availablechoices.get(1);
-			if(availablechoices.get(2).getRating() > availablechoices.get(0).getRating() && availablechoices.get(2).getRating() > availablechoices.get(1).getRating())
-				return availablechoices.get(1);
-		}
-		//if first two hotels have same price then we choose hotel with higer rating
-		if (availablechoices.get(0).getCostOfStay().equals(availablechoices.get(1).getCostOfStay()))
-		{
-			if(availablechoices.get(0).getRating() > availablechoices.get(1).getRating())
-				return availablechoices.get(0);
-			else
-				return availablechoices.get(1);
-		}
-		else
-		{
-			Hotel choice = availablechoices.get(0);
-			return choice;
-		}
+		Hotel choice = availablechoices.stream().filter(hotelObj1 -> hotelObj1.getCostOfStay().equals(availablechoices.get(0).getCostOfStay())).
+		sorted((HotelObj1, HotelObj2) -> -1*HotelObj1.getRating().compareTo(HotelObj2.getRating())).findFirst().get();
 		
+		return choice;
 	}
 }
