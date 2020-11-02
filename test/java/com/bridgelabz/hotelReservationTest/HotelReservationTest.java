@@ -56,8 +56,26 @@ public class HotelReservationTest {
 		HotelReservationSystem.getCostOfHotelStay(checkInDate, checkOutDate, "Regular");
 	}
 	
+	@Test(expected = InvalidCheckOutDateException.class)
+	public void whenEnteringDate_IfEnteredNull_verifyDateSHouldThrowInvalidCheckoutDateException()
+	{
+		HotelReservationSystem.verifyDate(null, HotelReservationSystem.DATE_REGEX);
+	}
+	
+	@Test(expected = InvalidCheckOutDateException.class)
+	public void whenEnteringDate_IfEnteredEmpty_verifyDateSHouldThrowInvalidCheckoutDateException()
+	{
+		HotelReservationSystem.verifyDate("", HotelReservationSystem.DATE_REGEX);
+	}
+	
+	@Test(expected = InvalidCheckOutDateException.class)
+	public void whenEnteringDate_IfEnteredInappropriately_verifyDateSHouldThrowInvalidCheckoutDateException()
+	{
+		HotelReservationSystem.verifyDate("2Dec202", HotelReservationSystem.DATE_REGEX);
+	}
+	
 	@Test
-	public void searchingForHighestRated_ShoudlReturnRidgeWood()
+	public void searchingForHighestRated_AsRegularCustomer_ShoudlReturnRidgeWood()
 	{
 
 		String checkInDateAsString = "31Oct2020";
@@ -66,7 +84,22 @@ public class HotelReservationTest {
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		Hotel highestRated = HotelReservationSystem.findHighestRatedHotelForRegularCustomer(checkInDate, checkOutDate);
+		Hotel highestRated = HotelReservationSystem.findHighestRatedHotelForCustomer(checkInDate, checkOutDate, "Regular");
+		
+		assertEquals("RidgeWood", highestRated.getHotelName());
+	}
+	
+	@Test
+	public void searchingForHighestRated_AsRewardCustomer_ShoudlReturnRidgeWood()
+	{
+
+		String checkInDateAsString = "31Oct2020";
+		String checkOutDateAsString = "01Nov2020";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern( "dMMMyyyy" );
+		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
+		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
+
+		Hotel highestRated = HotelReservationSystem.findHighestRatedHotelForCustomer(checkInDate, checkOutDate, "Reward");
 		
 		assertEquals("RidgeWood", highestRated.getHotelName());
 	}
