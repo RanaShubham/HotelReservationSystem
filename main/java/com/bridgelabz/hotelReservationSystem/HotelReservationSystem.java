@@ -6,25 +6,23 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class HotelReservationSystem
 {
-	public String hotelName;
-	public int regularWeekDayRate;
-	public int regularWeekEndPrice;
-	public int rating;
-	public int rewardPriceWeekDay;
-	public int rewardPriceWeekEnd;
+	//Hotel reservation list in form of customer name as key and booked hotel object as value
+	public static HashMap <String, Hotel> HotelReservationList = new HashMap<>();
+	
+	public static String cutomerType;
+	
+	public Object hotel;
+	public String customerName;
 
-	public HotelReservationSystem(String hotelName, int regularWeekDayPrice, int regularWeekEndPrice, int rating, int rewardPriceWeekDay, int rewardPriceWeekEnd)
+	public HotelReservationSystem(String customerName, Hotel hotel)
 	{
-		this.hotelName = hotelName;
-		this.regularWeekDayRate = regularWeekDayPrice;
-		this.regularWeekEndPrice = regularWeekEndPrice;
-		this.rating = rating;
-		this.rewardPriceWeekDay = rewardPriceWeekDay;
-		this.rewardPriceWeekEnd = rewardPriceWeekEnd;
+		this.customerName = customerName;
+		this.hotel = hotel;
 	}
 	
 	
@@ -37,22 +35,33 @@ public class HotelReservationSystem
 		
 		System.out.println("Enter check in date as DDMMMYYYY");
 		String checkInDateAsString = scan.next();
+		if(checkInDateAsString == null)
+		{
+			throw new InvalidCheckOutDateException("CheckIn date cannot be null");
+		}
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		
 		System.out.println("Enter check out date as DDMMMYYYY");
 		String checkOutDateAsString = scan.next();
+		if(checkOutDateAsString == null)
+		{
+			throw new InvalidCheckOutDateException("CheckOut date cannot be null");
+		}
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
-//		
-//		Hotel bestHotel = findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
-//		
-//			System.out.println(bestHotel.getHotelName()+", Rating: "+bestHotel.getRating()+" and Total rates: $"+bestHotel.getCostOfStay());
-		Hotel bestHotel = findHighestRatedHotelForRegularCustomer(checkInDate, checkOutDate);
+		
+		System.out.println("Enter customer type as 'Reward' or 'Regular'");
+		String customerType = scan.next();
+		
+		Hotel bestHotel = getCostOfHotelStay(checkInDate, checkOutDate, customerType);
 		
 		System.out.println(bestHotel.getHotelName()+", Rating: "+bestHotel.getRating()+" and Total rates: $"+bestHotel.getCostOfStay());
+//		Hotel bestHotel = findHighestRatedHotelForRegularCustomer(checkInDate, checkOutDate);
+		
+//		System.out.println(bestHotel.getHotelName()+", Rating: "+bestHotel.getRating()+" and Total rates: $"+bestHotel.getCostOfStay());
 	}
 
 	/**
-	 * To find the hotel with highest rating
+	 * Sorts the available hotel on the basis of rating and returns the cost of highest rated hotel for regular customer
 	 * @param checkInDate
 	 * @param checkOutDate
 	 * @return
@@ -92,25 +101,19 @@ public class HotelReservationSystem
 		availablechoices.get(0).setCostOfStay(availablechoices.get(0).getWeekDayRegularPrice()*weekDaysCounter+availablechoices.get(0).getWeekEndRegularPrice()*weekEndCounter);		
 		return availablechoices.get(0);
 	}
-
-	/**
-	 * @param hotel name
-	 * @param weekday regular price
-	 * @param weekend regular price
-	 * @return Returns a HotelReservationSystem object with name and rates for regular customer.
-	 */
-	public static HotelReservationSystem addHotelForRegularCustomer(String hotelName, int weekdayRegularPrice, int weekendRegularPrice, int rating, int rewardPriceWeekday, int rewardPriceWeekend) 
-	{
-		return new HotelReservationSystem(hotelName, weekdayRegularPrice, weekendRegularPrice, rating, rewardPriceWeekday, rewardPriceWeekend);
-	}
 	
 	/**
-	 * Calculates the price of all hotels based on stay duration.
+	 * Calculates the total price of stay for regular as well as reward customer for all hotels
 	 * @param checkInDate
 	 * @param checkoutDate
 	 */
-	public static Hotel findCheapestHotelForRegularCustomer(LocalDate checkInDate, LocalDate checkoutDate)
-	{	
+	public static Hotel getCostOfHotelStay(LocalDate checkInDate, LocalDate checkoutDate, String customerType)
+	{
+		if(customerType == null)
+		{
+			throw new InvalidCustomerTypeException("Customer Type cannot be null");
+		}
+		
 		int weekEndCounter = 0;
 		int weekDaysCounter = 0;
 		LocalDate startingDate =  checkInDate;
@@ -133,15 +136,30 @@ public class HotelReservationSystem
 			startingDate = startingDate.plusDays(1);
 		}
 		
-		ridgeWood.setCostOfStay(ridgeWood.getWeekDayRegularPrice()*weekDaysCounter+ridgeWood.getWeekEndRegularPrice()*weekEndCounter);
-		lakeWood.setCostOfStay(lakeWood.getWeekDayRegularPrice()*weekDaysCounter+lakeWood.getWeekEndRegularPrice()*weekEndCounter);;
-		bridgeWood.setCostOfStay(bridgeWood.getWeekDayRegularPrice()*weekDaysCounter+bridgeWood.getWeekEndRegularPrice()*weekEndCounter);;
+		if (customerType.equals("Regular"))
+		{
+			ridgeWood.setCostOfStay(ridgeWood.getWeekDayRegularPrice()*weekDaysCounter+ridgeWood.getWeekEndRegularPrice()*weekEndCounter);
+			lakeWood.setCostOfStay(lakeWood.getWeekDayRegularPrice()*weekDaysCounter+lakeWood.getWeekEndRegularPrice()*weekEndCounter);;
+			bridgeWood.setCostOfStay(bridgeWood.getWeekDayRegularPrice()*weekDaysCounter+bridgeWood.getWeekEndRegularPrice()*weekEndCounter);
 		
-		return getBestChoice(ridgeWood, lakeWood, bridgeWood);
+			return getBestChoice(ridgeWood, lakeWood, bridgeWood);
+		}
+		else if (customerType.equals("Reward"))
+		{
+			ridgeWood.setCostOfStay(ridgeWood.getWeekDayRewardPrice()*weekDaysCounter+ridgeWood.getWeeKEndRewardPrice()*weekEndCounter);
+			lakeWood.setCostOfStay(lakeWood.getWeekDayRewardPrice()*weekDaysCounter+lakeWood.getWeeKEndRewardPrice()*weekEndCounter);;
+			bridgeWood.setCostOfStay(bridgeWood.getWeekDayRewardPrice()*weekDaysCounter+bridgeWood.getWeeKEndRewardPrice()*weekEndCounter);;
+			
+			return getBestChoice(ridgeWood, lakeWood, bridgeWood);
+		}
+		else
+		{
+			throw new InvalidCustomerTypeException("Customer type not recognized");
+		}
 	}
-
+	
 	/**
-	 * To calculate rates of various available choices to return cheapest hotel.
+	 * Returns cheapest and best rated hotel among all options.
 	 * @param ridgeWood
 	 * @param lakeWood
 	 * @param bridgeWood
@@ -181,5 +199,4 @@ public class HotelReservationSystem
 			return choice;
 		}
 	}
-
 }
