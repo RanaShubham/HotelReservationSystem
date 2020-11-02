@@ -14,14 +14,19 @@ public class HotelReservationSystem
 	public int regularWeekDayRate;
 	public int regularWeekEndPrice;
 	public int rating;
+	public int rewardPriceWeekDay;
+	public int rewardPriceWeekEnd;
 
-	public HotelReservationSystem(String hotelName, int regularWeekDayPrice, int regularWeekEndPrice, int rating)
+	public HotelReservationSystem(String hotelName, int regularWeekDayPrice, int regularWeekEndPrice, int rating, int rewardPriceWeekDay, int rewardPriceWeekEnd)
 	{
 		this.hotelName = hotelName;
 		this.regularWeekDayRate = regularWeekDayPrice;
 		this.regularWeekEndPrice = regularWeekEndPrice;
 		this.rating = rating;
+		this.rewardPriceWeekDay = rewardPriceWeekDay;
+		this.rewardPriceWeekEnd = rewardPriceWeekEnd;
 	}
+	
 	
 	public static void main(String[] args) 
 	{
@@ -94,9 +99,9 @@ public class HotelReservationSystem
 	 * @param weekend regular price
 	 * @return Returns a HotelReservationSystem object with name and rates for regular customer.
 	 */
-	public static HotelReservationSystem addHotelForRegularCustomer(String hotelName, int weekdayRegularPrice, int weekendRegularPrice, int rating) 
+	public static HotelReservationSystem addHotelForRegularCustomer(String hotelName, int weekdayRegularPrice, int weekendRegularPrice, int rating, int rewardPriceWeekday, int rewardPriceWeekend) 
 	{
-		return new HotelReservationSystem(hotelName, weekdayRegularPrice, weekendRegularPrice, rating);
+		return new HotelReservationSystem(hotelName, weekdayRegularPrice, weekendRegularPrice, rating, rewardPriceWeekday, rewardPriceWeekend);
 	}
 	
 	/**

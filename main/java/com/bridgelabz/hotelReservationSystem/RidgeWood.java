@@ -8,7 +8,7 @@ public class RidgeWood extends Hotel
 	private final int WEEKDAY_REWARD_PRICE = 100;
 	private final int WEEKEND_REGULAR_PRICE = 150;
 	private final int WEEKEND_REWARD_PRICE = 40;
-	public Integer costOfStay = 0;
+	public int costOfStay = 0;
 	
 	@Override
 	public Integer getRating() {
@@ -16,22 +16,22 @@ public class RidgeWood extends Hotel
 		return RATING;
 	}
 	@Override
-	public int getWeekDayRegularPrice() {
+	public Integer getWeekDayRegularPrice() {
 		// TODO Auto-generated method stub
 		return WEEKDAY_REGULAR_PRICE;
 	}
 	@Override
-	public int getWeekDayRewardPrice() {
+	public Integer getWeekDayRewardPrice() {
 		// TODO Auto-generated method stub
 		return WEEKDAY_REWARD_PRICE;
 	}
 	@Override
-	public int getWeekEndRegularPrice() {
+	public Integer getWeekEndRegularPrice() {
 		// TODO Auto-generated method stub
 		return WEEKEND_REGULAR_PRICE;
 	}
 	@Override
-	public int getWeeKEndRewardPrice() {
+	public Integer getWeeKEndRewardPrice() {
 		// TODO Auto-generated method stub
 		return WEEKEND_REWARD_PRICE;
 	}

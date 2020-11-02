@@ -15,12 +15,12 @@ import com.bridgelabz.hotelReservationSystem.RidgeWood;
 public class HotelReservationTest {
 
 	@Test
-	public void addingHotelObjectToTheHtoelmanagementSsetm_ShouldContainCorrectPricesAndNameOfTheHotel() 
+	public void addingHotelObjectToTheHotelmanagementSsetm_ShouldContainCorrectPricesAndNameOfTheHotel() 
 	{
 		//Hotel object for which we need to create HotelReservationSystem object
 		RidgeWood ridgeWood = new RidgeWood();
 		
-		HotelReservationSystem newHotel = HotelReservationSystem.addHotelForRegularCustomer(ridgeWood.getHotelName(), ridgeWood.getWeekDayRegularPrice(), ridgeWood.getWeekEndRegularPrice(), ridgeWood.getRating());
+		HotelReservationSystem newHotel = HotelReservationSystem.addHotelForRegularCustomer(ridgeWood.getHotelName(), ridgeWood.getWeekDayRegularPrice(), ridgeWood.getWeekEndRegularPrice(), ridgeWood.getRating(), ridgeWood.getWeekDayRewardPrice(), ridgeWood.getWeeKEndRewardPrice());
 		boolean result = newHotel.hotelName.equals(ridgeWood.getHotelName()) && 
 		newHotel.regularWeekDayRate ==  ridgeWood.getWeekDayRegularPrice() &&
 		newHotel.regularWeekEndPrice == ridgeWood.getWeekEndRegularPrice();
@@ -67,7 +67,7 @@ public class HotelReservationTest {
 		LocalDate checkInDate = LocalDate.parse(checkInDateAsString , formatter);
 		LocalDate checkOutDate = LocalDate.parse(checkOutDateAsString , formatter);
 
-		Hotel cheaptestHotel = HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
+		HotelReservationSystem.findCheapestHotelForRegularCustomer(checkInDate, checkOutDate);
 	}
 	
 	@Test
