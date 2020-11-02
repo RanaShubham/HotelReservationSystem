@@ -81,7 +81,7 @@ public class HotelReservationSystem
 	}
 
 	/**
-	 * Sorts the available hotel on the basis of rating and returns the cost of highest rated hotel for regular customer
+	 * Sorts the available hotel on the basis of rating and returns the cost of highest rated hotel for both customer types.
 	 * @param checkInDate
 	 * @param checkOutDate
 	 * @return
@@ -139,7 +139,7 @@ public class HotelReservationSystem
 	}
 	
 	/**
-	 * Fetches best hotel for regular as well as reward customer for among all hotels based on rating and price.
+	 * Fetches best hotel for regular and reward customer for among all hotels based on rating and price.
 	 * @param checkInDate
 	 * @param checkoutDate
 	 */
