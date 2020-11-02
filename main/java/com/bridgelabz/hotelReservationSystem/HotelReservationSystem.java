@@ -7,7 +7,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,7 +28,6 @@ public class HotelReservationSystem
 		this.customerName = customerName;
 		this.hotel = hotel;
 	}
-	
 	
 	public static void main(String[] args) 
 	{
@@ -56,8 +54,15 @@ public class HotelReservationSystem
 		//Getting cheapest hotel for both customer types
 		Hotel bestHotel = getBestHotelHotelByCostAndRating(checkInDate, checkOutDate, customerType);
 		System.out.println("Most affordable hotel for "+customerType+" customer is "+bestHotel.getHotelName()+", Rating: "+bestHotel.getRating()+" and Total rates: $"+bestHotel.getCostOfStay());
+		
+		scan.close();
 	}
 
+	/**
+	 * Verifies entered date pattern for checkin date and checkout date
+	 * @param date
+	 * @param DATE_REGEX
+	 */
 	public static void verifyDate(String date, String DATE_REGEX) 
 	{
 		try {
@@ -74,7 +79,6 @@ public class HotelReservationSystem
 			throw new InvalidCheckOutDateException("Dates cannot be null");
 		}
 	}
-
 
 	/**
 	 * Sorts the available hotel on the basis of rating and returns the cost of highest rated hotel for regular customer
